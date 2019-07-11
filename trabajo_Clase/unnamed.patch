@@ -1,0 +1,215 @@
+Index: UNI/trabajo_Clase/src/com/hernandez/LectorDeDatos.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/LectorDeDatos.java	(date 1562121294384)
++++ UNI/trabajo_Clase/src/com/hernandez/LectorDeDatos.java	(date 1562121294384)
+@@ -0,0 +1,29 @@
++package com.hernandez;
++
++import java.util.InputMismatchException;
++import java.util.Scanner;
++
++public class LectorDeDatos {
++    public static int solicitarEntero(String mensaje) {
++        Scanner lector = new Scanner(System.in);
++        System.out.print(mensaje);
++        try {
++            int numero = lector.nextInt();
++            return numero;
++        } catch (InputMismatchException e) {
++            System.out.println("El dato ingresado no es valido");
++            return solicitarEntero(mensaje);
++        }
++    }
++    public static double solicitarFlotante(String mensaje) {
++        Scanner lector = new Scanner(System.in);
++        System.out.print(mensaje);
++        try {
++            double numero = lector.nextDouble();
++            return numero;
++        } catch (InputMismatchException e) {
++            System.out.println("El dato ingresado no es valido");
++            return solicitarFlotante(mensaje);
++        }
++    }
++}
+Index: UNI/trabajo_Clase/src/Cuenta.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/Cuenta.java	(date 1561686010338)
++++ UNI/trabajo_Clase/src/Cuenta.java	(date 1561686010338)
+@@ -0,0 +1,2 @@
++public class Cuenta {
++}
+Index: UNI/trabajo_Clase/src/com/hernandez/CuentaAhorro.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/CuentaAhorro.java	(date 1562290579738)
++++ UNI/trabajo_Clase/src/com/hernandez/CuentaAhorro.java	(date 1562290579738)
+@@ -0,0 +1,13 @@
++package com.hernandez;
++
++public class CuentaAhorro extends Cuenta {
++    public final double SALDO_MIN_BONO = 50_000;
++    public final double INTERES_BONO = .01;
++
++    public boolean depositar(double monto) {
++        if (monto > SALDO_MIN_BONO){
++            monto += (monto * INTERES_BONO);
++        }
++        return super.depositar(monto);
++    }
++}
+Index: UNI/trabajo_Clase/src/com/hernandez/Cliente.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/Cliente.java	(date 1562806092586)
++++ UNI/trabajo_Clase/src/com/hernandez/Cliente.java	(date 1562806092586)
+@@ -0,0 +1,70 @@
++package com.hernandez;
++
++import com.hernandez.excepciones.ErrorValidacion;
++
++public class Cliente {
++
++    private String id;
++    private String nombre;
++    private String apellido;
++    private String telefono;
++    private String email;
++
++    public Cliente(String id, String nombre, String apellido){
++
++    }
++
++    public String getId(){
++        return id;
++    }
++
++    public void setId(String id) throws Exception{
++        if (id.length()!= 13) {
++            throw new ErrorValidacion("El numero de identidad debe contener 13 caracteres");
++        }
++        this.id = id;
++    }
++
++    public String getNombre() {
++        return nombre;
++
++
++    }
++
++    public void setApellido(String apellido) {
++        this.apellido = apellido;
++    }
++
++    public String getNombreCompleto(){
++        return  this.nombre + " " + this.apellido;
++    }
++
++    public String getTelefono() {
++        return telefono;
++    }
++
++    public void setTelefono(String telefono) {
++        if (!telefono.matches("(^((\\+504\\s?)[\\d]{4}-?[\\d]{4}")){
++
++        }
++        this.telefono = telefono;
++
++    }
++
++    public String getEmail() {
++        return email;
++    }
++
++
++    public void setEmail(String email) throws ErrorValidacion {
++        if (!telefono.matches("^(\\+?504\\s?)?[0-9]{4}\\-?[0-9]{4}")){
++            throw new ErrorValidacion("Correo electronico invalido");
++
++        }
++        this.email = email;
++
++    }
++}
++
++//Getters para devolver info
++//Setters para modificar el estado
+Index: UNI/trabajo_Clase/src/com/hernandez/Cuenta.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/Cuenta.java	(date 1561688661434)
++++ UNI/trabajo_Clase/src/com/hernandez/Cuenta.java	(date 1561688661434)
+@@ -0,0 +1,24 @@
++package com.hernandez;
++
++public abstract class Cuenta {
++    public int numCuenta;
++    public double saldo;
++    public final double SALDO_MAX = 10_000_000;
++
++
++    public boolean retirar(double monto) {
++        if ((saldo - monto) < 0) {
++            return false;
++        }
++        saldo -= monto;
++        return  true;
++    }
++    public boolean depositar(double monto){
++        if ((monto + saldo) > SALDO_MAX) {
++            return false;
++        }
++        saldo += monto;
++        return true;
++    }
++
++}
+Index: UNI/trabajo_Clase/src/com/hernandez/excepciones/ErrorValidacion.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/excepciones/ErrorValidacion.java	(date 1562292314746)
++++ UNI/trabajo_Clase/src/com/hernandez/excepciones/ErrorValidacion.java	(date 1562292314746)
+@@ -0,0 +1,9 @@
++package com.hernandez.excepciones;
++
++public class ErrorValidacion extends Exception {
++
++    public ErrorValidacion(String mensaje){
++        super(mensaje);
++    }
++
++}
+Index: UNI/trabajo_Clase/src/com/hernandez/CuentaLargoPlazo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- UNI/trabajo_Clase/src/com/hernandez/CuentaLargoPlazo.java	(date 1562290579615)
++++ UNI/trabajo_Clase/src/com/hernandez/CuentaLargoPlazo.java	(date 1562290579615)
+@@ -0,0 +1,12 @@
++package com.hernandez;
++
++public class CuentaLargoPlazo extends Cuenta {
++
++    public final double PENALTY = .05;
++
++    public boolean retirar(double monto){
++        monto += (monto * PENALTY);
++
++        return super.retirar(monto);
++    }
++}
